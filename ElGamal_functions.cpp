@@ -43,6 +43,18 @@ int repeated_square_and_multiply(int a, int k, int m)
     return b;
 }
 
+int find_generator(int n, int t[])
+{
+    int g = 0;
+    for (int i = 0; i < n; i++) {
+        if (primality(t[i])) {
+            g = t[i];
+            break;
+        }
+    }
+    return g;
+}
+
 //Constructor
 client::client(int message, int p, int alpha) {
     plaintext = message;
@@ -72,9 +84,10 @@ void client::decrypt() {
 
 int client::send_cipher() {
 
+    return 0;
 }
 
 int client::get_public_key() {
-
+    return 0;
 }
 
