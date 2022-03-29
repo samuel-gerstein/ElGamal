@@ -2,6 +2,9 @@
 #define ELGAMAL_H
 #include <iostream>
 #include <cmath>
+#include <string>
+using namespace std;
+
 class client {
     public:
         client(int message, int p, int alpha);
