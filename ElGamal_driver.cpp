@@ -1,4 +1,4 @@
-#include "ElGamal_functions.cpp"
+#include "ElGamal.h"
 
 int main()
 
