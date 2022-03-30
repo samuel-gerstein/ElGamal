@@ -5,6 +5,16 @@
 #include <random>
 using namespace std;
 
+string decimalToBinary(int n) {
+    string result = "";
+    while (n > 0) {
+        result = to_string(n % 2) + result;
+        n /= 2;
+    }
+    cout << result << endl;
+    return result;
+}
+
 bool primality(int n) {
     if (n == 2 || n == 3)
         return true;
@@ -19,82 +29,6 @@ bool primality(int n) {
     }
 
     return true;
-}
-
-class client {
-    public:
-        client(int msg, int enc_msg);
-        void generateKeys();
-        void encrypt(int recipient_key);
-        void decrypt(int sender_key);
-        int send_cipher();
-        int get_public_key();
-    private:
-        int plaintext;  // plaintext to be encrypted or found via encryption
-        int ciphertext; // ciphertext to be sent or found via decryption
-        int public_key;
-        int private_key;
-        int prime;
-        int alpha;
-        int modulus;
-};
-
-//Constructor
-client::client(int msg, int enc_msg) {
-
-}
-
-
-void client::generateKeys() {
-
-    //random large prime number 
-    unsigned long long int random = pow(10,30) * rand();
-    while (primality(random) != true) {
-        random = pow(10, 30) * rand();
-    }
-    int generator = findPrimitive(random);
-    default_random_engine dis_gen;
-    uniform_int_distribution<int> distrib(1, random-2);
-    int a=distrib(dis_gen);
-    prime = random;
-    alpha = generator;
-    private_key = a;
-    public_key = repeated_square_and_multiply(generator, a, prime);
-}
-void client::encrypt(int recipient_key) {
-    default_random_engine dis_gen;
-    uniform_int_distribution<int> distrib(1, prime-2);
-    int k=distrib(dis_gen);
-    public_key = repeated_square_and_multiply(alpha, k, prime);
-    ciphertext = plaintext * public_key;
-}
-
-void client::decrypt(int sender_key) {
-    int gamma = repeated_square_and_multiply(sender_key, (prime-1-private_key), prime);
-    plaintext = ciphertext * gamma;
-}
-
-int client::send_cipher() {
-
-    return 0;
-}
-
-int client::get_public_key() {
-    return 0;
-}
-
-
-//
-
-
-string decimalToBinary(int n) {
-    string result = "";
-    while (n > 0) {
-        result = to_string(n % 2) + result;
-        n /= 2;
-    }
-    cout << result << endl;
-    return result;
 }
 
 int repeated_square_and_multiply(int a, int k, int m)
@@ -185,8 +119,103 @@ int findPrimitive(int n)
     // If no primitive root found
     return -1;
 }
+//
 
-///////
+class client {
+    public:
+        client(int msg);
+        void generateKeys();
+        void encrypt(int recipient_key, int generator, int p);
+        void decrypt(int sender_key);
+        int send_cipher();
+        int get_public_key();
+        int get_message();
+        int get_generator();
+        int get_prime();
+    private:
+        int plaintext;  // plaintext to be encrypted or found via encryption
+        int ciphertext; // ciphertext to be sent or found via decryption
+        int public_key;
+        int private_key;
+        int prime;
+        int alpha;
+        int modulus;
+};
+
+//Constructor
+client::client(int msg) {
+
+}
+
+
+void client::generateKeys() {
+
+    //random large prime number 
+    unsigned long long int random = pow(10,30) * rand();
+    while (primality(random) != true) {
+        random = pow(10, 30) * rand();
+    }
+    int generator = findPrimitive(random);
+    default_random_engine dis_gen;
+    uniform_int_distribution<int> distrib(1, random-2);
+    int a=distrib(dis_gen);
+    prime = random;
+    alpha = generator;
+    private_key = a;
+    public_key = repeated_square_and_multiply(generator, a, prime);
+}
+void client::encrypt(int recipient_key, int generator, int p) {
+    alpha = generator;
+    prime = p;
+    default_random_engine dis_gen;
+    uniform_int_distribution<int> distrib(1, prime-2);
+    int k=distrib(dis_gen);
+    public_key = repeated_square_and_multiply(alpha, k, prime);
+    ciphertext = plaintext * public_key;
+}
+
+void client::decrypt(int sender_key) {
+    int gamma = repeated_square_and_multiply(sender_key, (prime-1-private_key), prime);
+    plaintext = ciphertext * gamma;
+}
+
+int client::send_cipher() {
+
+    return ciphertext;
+}
+
+int client::get_public_key() {
+    return public_key;
+}
+
+int client::get_generator() {
+    return alpha;
+}
+
+int client::get_prime() {
+    return prime;
+}
+int client::get_message() {
+    return plaintext;
+}
+
 int main()
 {
+    int message = 1000;
+    client Alice(1000);
+    client Bob(0);
+    Bob.generateKeys();
+    int Bob_public_key = Bob.get_public_key();
+    int Bob_prime = Bob.get_prime();
+    int Bob_alpha = Bob.get_generator();
+    Alice.encrypt(Bob_public_key, Bob_prime, Bob_alpha);
+    int Alice_public_key = Alice.get_public_key();
+    int Alice_prime = Alice.get_prime();
+    int Alice_alpha = Alice.get_generator();
+
+    Bob.decrypt(Alice_public_key);
+    cout << "Alice sends: " << Alice.send_cipher() << endl;
+    cout << "Bob receives: " << Bob.send_cipher() << endl;
+    cout << "Bob decrypts to: " << Bob.get_message() << endl;
+    return 0;
 }
