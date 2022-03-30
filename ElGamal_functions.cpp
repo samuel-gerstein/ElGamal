@@ -2,6 +2,7 @@
 #include <cmath>
 #include <string>
 #include <unordered_set>
+#include <random>
 using namespace std;
 
 bool primality(int n) {
@@ -44,13 +45,14 @@ client::client(int msg, int enc_msg, int modulus) {
 int client::generateKeys() {
 
     //random large prime number 
-    srand(time(0));
     unsigned long long int random = pow(10,30) * rand();
     while (primality(random) != true) {
         random = pow(10, 30) * rand();
     }
     int generator = findPrimitive(random);
-    int a = 
+    default_random_engine generator;
+    uniform_int_distribution<int> distrib(1, random-2);
+    int a=distrib(generator);
     public_key = repeated_square_and_multiply(generator, a, modulus);
     return random, generator, public_key;
 }
