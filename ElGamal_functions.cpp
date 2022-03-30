@@ -22,7 +22,7 @@ bool primality(int n) {
 
 class client {
     public:
-        client(int message, int p, int alpha);
+        client(int msg, int enc_msg);
         void generateKeys();
         void encrypt();
         void decrypt();
@@ -38,10 +38,8 @@ class client {
 };
 
 //Constructor
-client::client(int message, int p, int alpha) {
-    plaintext = message;
-    prime = p;
-    generator = alpha;
+client::client(int msg, int enc_msg) {
+
 }
 
 
