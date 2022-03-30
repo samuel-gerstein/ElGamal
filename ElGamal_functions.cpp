@@ -24,8 +24,8 @@ bool primality(int n) {
 class client {
     public:
         client(int msg, int enc_msg, int modulus);
-        int generateKeys();
-        void encrypt();
+        void generateKeys();
+        void encrypt(int sender_key);
         void decrypt();
         int send_cipher();
         int get_public_key();
@@ -33,6 +33,8 @@ class client {
         int plaintext;  // plaintext to be encrypted or found via encryption
         int ciphertext; // ciphertext to be sent or found via decryption
         int public_key;
+        int prime;
+        int alpha;
         int modulus;
 };
 
@@ -42,7 +44,7 @@ client::client(int msg, int enc_msg, int modulus) {
 }
 
 
-int client::generateKeys() {
+void client::generateKeys() {
 
     //random large prime number 
     unsigned long long int random = pow(10,30) * rand();
@@ -50,14 +52,14 @@ int client::generateKeys() {
         random = pow(10, 30) * rand();
     }
     int generator = findPrimitive(random);
-    default_random_engine generator;
+    default_random_engine dis_gen;
     uniform_int_distribution<int> distrib(1, random-2);
-    int a=distrib(generator);
+    int a=distrib(dis_gen);
     public_key = repeated_square_and_multiply(generator, a, modulus);
-    return random, generator, public_key;
+    prime = random;
+    alpha = generator;
 }
-
-void client::encrypt() {
+void client::encrypt(int sender_key) {
 
 }
 
