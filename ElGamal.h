@@ -16,7 +16,8 @@ class client {
         bool primality(int n);
         string decimalToBinary(int n);
         int repeated_square_and_multiply(int a, int k, int m);
-        int find_generator(int n, int t[]);
+        void prime_factorization(int *set, int n);
+        int find_generator(int n);
     private:
         int plaintext;  // plaintext to be encrypted or found via encryption
         int ciphertext; // ciphertext to be sent or found via decryption
