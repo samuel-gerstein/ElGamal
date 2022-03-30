@@ -21,13 +21,13 @@ bool primality(int n) {
 
     if (n <= 1 || n % 2 == 0 || n % 3 == 0)
         return false;
-
+    cout << "Hi" << endl;
     for (int i = 5; i * i <= n; i += 6)
     {
         if (n % i == 0 || n % (i + 2) == 0)
             return false;
     }
-
+    cout << "Hi" << endl;
     return true;
 }
 
@@ -144,17 +144,21 @@ class client {
 
 //Constructor
 client::client(int msg) {
-
+    plaintext = msg;
 }
 
 
 void client::generateKeys() {
 
-    //random large prime number 
-    unsigned long long int random = pow(10,30) * rand();
-    while (primality(random) != true) {
-        random = pow(10, 30) * rand();
-    }
+    // //random large prime number 
+    // unsigned long long int random = pow(10,30) * rand();
+    // while (primality(random) != true) {
+    //     srand(time(0));
+    //     random = pow(10, 30) * (rand() %100);
+    //     cout<<random<<endl;
+    // }
+    int random = 7919;
+    cout << "Work" << endl;
     int generator = findPrimitive(random);
     default_random_engine dis_gen;
     uniform_int_distribution<int> distrib(1, random-2);
@@ -201,10 +205,12 @@ int client::get_message() {
 
 int main()
 {
+    cout << primality(7) << endl;
     int message = 1000;
     client Alice(1000);
     client Bob(0);
     Bob.generateKeys();
+    cout << "Hi" << endl;
     int Bob_public_key = Bob.get_public_key();
     int Bob_prime = Bob.get_prime();
     int Bob_alpha = Bob.get_generator();
