@@ -23,23 +23,24 @@ bool primality(int n) {
 
 class client {
     public:
-        client(int msg, int enc_msg, int modulus);
+        client(int msg, int enc_msg);
         void generateKeys();
-        void encrypt(int sender_key);
-        void decrypt();
+        void encrypt(int recipient_key);
+        void decrypt(int sender_key);
         int send_cipher();
         int get_public_key();
     private:
         int plaintext;  // plaintext to be encrypted or found via encryption
         int ciphertext; // ciphertext to be sent or found via decryption
         int public_key;
+        int private_key;
         int prime;
         int alpha;
         int modulus;
 };
 
 //Constructor
-client::client(int msg, int enc_msg, int modulus) {
+client::client(int msg, int enc_msg) {
 
 }
 
@@ -55,16 +56,22 @@ void client::generateKeys() {
     default_random_engine dis_gen;
     uniform_int_distribution<int> distrib(1, random-2);
     int a=distrib(dis_gen);
-    public_key = repeated_square_and_multiply(generator, a, modulus);
     prime = random;
     alpha = generator;
+    private_key = a;
+    public_key = repeated_square_and_multiply(generator, a, prime);
 }
-void client::encrypt(int sender_key) {
-
+void client::encrypt(int recipient_key) {
+    default_random_engine dis_gen;
+    uniform_int_distribution<int> distrib(1, prime-2);
+    int k=distrib(dis_gen);
+    public_key = repeated_square_and_multiply(alpha, k, prime);
+    ciphertext = plaintext * public_key;
 }
 
-void client::decrypt() {
-
+void client::decrypt(int sender_key) {
+    int gamma = repeated_square_and_multiply(sender_key, (prime-1-private_key), prime);
+    plaintext = ciphertext * gamma;
 }
 
 int client::send_cipher() {
