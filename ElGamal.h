@@ -13,6 +13,10 @@ class client {
         void decrypt();
         int send_cipher();
         int get_public_key();
+        bool primality(int n);
+        string decimalToBinary(int n);
+        int repeated_square_and_multiply(int a, int k, int m);
+        int find_generator(int n, int t[]);
     private:
         int plaintext;  // plaintext to be encrypted or found via encryption
         int ciphertext; // ciphertext to be sent or found via decryption

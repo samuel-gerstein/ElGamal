@@ -1,60 +1,5 @@
 #include "ElGamal.h"
 
-bool primality(int n) {
-    if (n == 2 || n == 3)
-        return true;
-
-    if (n <= 1 || n % 2 == 0 || n % 3 == 0)
-        return false;
-
-    for (int i = 5; i * i <= n; i += 6)
-    {
-        if (n % i == 0 || n % (i + 2) == 0)
-            return false;
-    }
-
-    return true;
-}
-
-string decimalToBinary(int n) {
-    string result = "";
-    while (n > 0) {
-        result = to_string(n % 2) + result;
-        n /= 2;
-    }
-    cout << result << endl;
-    return result;
-}
-
-int repeated_square_and_multiply(int a, int k, int m)
-{
-    int b = 1;
-    string k_binary = decimalToBinary(k);
-    if (k_binary[(k_binary.length()-1)] == '1')
-    {
-        b = a;
-    }
-    for (int i = 1; i < k_binary.length(); i++) {
-        a = (a * a) % m;
-        if (k_binary[(k_binary.length()-i-1)] == '1') {
-            b = (b * a) % m;
-        }
-    }
-    return b;
-}
-
-int find_generator(int n, int t[])
-{
-    int g = 0;
-    for (int i = 0; i < n; i++) {
-        if (primality(t[i])) {
-            g = t[i];
-            break;
-        }
-    }
-    return g;
-}
-
 //Constructor
 client::client(int message, int p, int alpha) {
     plaintext = message;
@@ -91,3 +36,49 @@ int client::get_public_key() {
     return 0;
 }
 
+bool client::primality(int n) {
+    if (n == 2 || n == 3)
+        return true;
+
+    if (n <= 1 || n % 2 == 0 || n % 3 == 0)
+        return false;
+
+    for (int i = 5; i * i <= n; i += 6)
+    {
+        if (n % i == 0 || n % (i + 2) == 0)
+            return false;
+    }
+
+    return true;
+}
+
+string client::decimalToBinary(int n) {
+    string result = "";
+    while (n > 0) {
+        result = to_string(n % 2) + result;
+        n /= 2;
+    }
+    cout << result << endl;
+    return result;
+}
+
+int client::repeated_square_and_multiply(int a, int k, int m)
+{
+    int b = 1;
+    string k_binary = decimalToBinary(k);
+    if (k_binary[(k_binary.length()-1)] == '1')
+    {
+        b = a;
+    }
+    for (int i = 1; i < k_binary.length(); i++) {
+        a = (a * a) % m;
+        if (k_binary[(k_binary.length()-i-1)] == '1') {
+            b = (b * a) % m;
+        }
+    }
+    return b;
+}
+
+int client::find_generator(int n, int t[])
+{
+}
